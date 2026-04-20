@@ -6,11 +6,20 @@
   <title>Nando Labs</title>
   <style>
     :root {
-      --text: #f5f7fb;
-      --muted: rgba(245,247,251,.82);
-      --overlay: rgba(4, 10, 22, 0.55);
-      --overlay-strong: rgba(4, 10, 22, 0.7);
-      --accent: #d8ecff;
+      --text: #f7f8fc;
+      --muted: rgba(247, 248, 252, 0.82);
+      --accent: #f2f7ff;
+      --panel: rgba(255,255,255,0.05);
+      --panel-border: rgba(255,255,255,0.12);
+      --sky-top: #010103;
+      --sky-mid: #04050a;
+      --sky-bottom: #090b12;
+    }
+
+    body.day {
+      --sky-top: #1a6db5;
+      --sky-mid: #5ba3d0;
+      --sky-bottom: #a8d4f0;
     }
 
     * { box-sizing: border-box; }
@@ -19,9 +28,7 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       overflow: hidden;
-      background:
-        linear-gradient(var(--overlay), var(--overlay-strong)),
-        url('https://images.unsplash.com/photo-1755544510970-a7011e59d251?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat fixed;
+      background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 48%, var(--sky-bottom) 100%);
     }
 
     .scene {
@@ -33,55 +40,152 @@
       isolation: isolate;
     }
 
-    .scene::before {
+    .stars,
+    .stars::before,
+    .stars::after {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,.25) 0 1px, transparent 1px),
-        radial-gradient(circle at 70% 30%, rgba(255,255,255,.18) 0 1px, transparent 1px),
-        radial-gradient(circle at 40% 75%, rgba(255,255,255,.2) 0 1px, transparent 1px),
-        radial-gradient(circle at 85% 60%, rgba(255,255,255,.16) 0 1px, transparent 1px),
-        radial-gradient(circle at 55% 50%, rgba(255,255,255,.18) 0 1px, transparent 1px);
-      background-size: 280px 280px, 340px 340px, 300px 300px, 380px 380px, 240px 240px;
-      opacity: .85;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,.95) 0 1.2px, transparent 1.4px),
+        radial-gradient(circle at 24% 42%, rgba(255,255,255,.72) 0 1px, transparent 1.2px),
+        radial-gradient(circle at 68% 22%, rgba(255,255,255,.88) 0 1.1px, transparent 1.3px),
+        radial-gradient(circle at 82% 34%, rgba(255,255,255,.7) 0 1px, transparent 1.2px),
+        radial-gradient(circle at 55% 12%, rgba(255,255,255,.9) 0 1.2px, transparent 1.4px),
+        radial-gradient(circle at 91% 14%, rgba(255,255,255,.78) 0 1px, transparent 1.2px),
+        radial-gradient(circle at 37% 26%, rgba(255,255,255,.8) 0 1px, transparent 1.2px),
+        radial-gradient(circle at 6% 32%, rgba(255,255,255,.65) 0 .9px, transparent 1.1px),
+        radial-gradient(circle at 44% 8%, rgba(255,255,255,.82) 0 1px, transparent 1.2px),
+        radial-gradient(circle at 77% 44%, rgba(255,255,255,.6) 0 .9px, transparent 1.1px),
+        radial-gradient(circle at 18% 52%, rgba(255,255,255,.5) 0 .8px, transparent 1px),
+        radial-gradient(circle at 60% 36%, rgba(255,255,255,.7) 0 1px, transparent 1.2px),
+        radial-gradient(circle at 33% 14%, rgba(255,255,255,.85) 0 1.1px, transparent 1.3px),
+        radial-gradient(circle at 88% 28%, rgba(255,255,255,.6) 0 .9px, transparent 1.1px);
+      z-index: -4;
+      opacity: .9;
+    }
+
+    .stars::before { transform: scale(1.1); opacity: .55; filter: blur(.2px); }
+    .stars::after  { transform: scale(1.25); opacity: .35; filter: blur(.4px); }
+
+    body.day .stars,
+    body.day .stars::before,
+    body.day .stars::after { display: none; }
+
+    .mountains,
+    .mountains::before,
+    .mountains::after {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      content: "";
+      z-index: -3;
+    }
+
+    .mountains {
+      height: 36vh;
+      background: #020203;
+      clip-path: polygon(
+        0 100%, 0 70%,
+        4% 62%, 8% 52%, 11% 40%, 13% 32%, 15% 24%, 17% 32%, 19% 44%,
+        22% 34%, 25% 20%, 27% 14%, 29% 20%, 32% 34%,
+        35% 22%, 38% 10%, 40% 4%, 42% 10%, 45% 24%,
+        48% 14%, 51% 6%, 53% 2%, 55% 6%, 58% 20%,
+        62% 10%, 65% 4%, 67% 10%, 70% 24%,
+        73% 14%, 76% 8%, 79% 14%, 82% 26%,
+        86% 16%, 89% 10%, 92% 16%, 95% 28%,
+        98% 22%, 100% 28%, 100% 100%
+      );
+      opacity: .95;
+    }
+
+    .mountains::before {
+      height: 30vh;
+      background: #06070a;
+      clip-path: polygon(
+        0 100%, 0 76%,
+        4% 66%, 8% 54%, 12% 44%, 15% 36%, 17% 28%, 19% 36%, 22% 48%,
+        25% 38%, 28% 24%, 30% 16%, 32% 24%, 35% 38%,
+        38% 26%, 41% 14%, 44% 6%, 46% 14%, 49% 28%,
+        53% 16%, 56% 8%, 59% 14%, 62% 28%,
+        66% 16%, 69% 10%, 72% 16%, 75% 30%,
+        79% 20%, 83% 12%, 86% 20%, 89% 34%,
+        93% 24%, 97% 18%, 100% 24%, 100% 100%
+      );
+      opacity: .9;
+    }
+
+    .mountains::after {
+      height: 22vh;
+      background: #0b0d13;
+      clip-path: polygon(
+        0 100%, 0 82%,
+        4% 74%, 8% 64%, 12% 54%, 16% 44%, 19% 36%, 21% 44%, 24% 56%,
+        27% 44%, 30% 32%, 33% 22%, 35% 32%, 38% 46%,
+        42% 34%, 45% 20%, 48% 10%, 50% 20%, 53% 36%,
+        57% 24%, 61% 12%, 64% 20%, 67% 36%,
+        71% 24%, 75% 14%, 78% 24%, 81% 38%,
+        85% 26%, 89% 16%, 93% 26%, 96% 38%,
+        100% 32%, 100% 100%
+      );
+      opacity: .75;
+    }
+
+    body.day .mountains {
+      background: linear-gradient(180deg, #8BA8B4 0%, #6A8A96 100%);
+      opacity: 0.88;
+    }
+    body.day .mountains::before {
+      background: linear-gradient(180deg, #4A6B40 0%, #354E2C 100%);
+      opacity: 0.95;
+    }
+    body.day .mountains::after {
+      background: linear-gradient(180deg, #2D4220 0%, #1C2C14 100%);
+      opacity: 1;
+    }
+
+    .sun {
+      position: absolute;
+      top: 8%;
+      right: 8%;
+      width: clamp(55px, 7vw, 100px);
+      height: clamp(55px, 7vw, 100px);
+      border-radius: 50%;
+      background: radial-gradient(circle, #fffde0 0%, #ffe566 30%, #ffb700 60%, transparent 78%);
+      box-shadow:
+        0 0 clamp(30px,4vw,55px) clamp(14px,2vw,28px) rgba(255,205,50,.38),
+        0 0 clamp(70px,9vw,120px) clamp(35px,5vw,65px) rgba(255,165,0,.16);
+      display: none;
+      z-index: -1;
+    }
+    body.day .sun { display: block; }
+
+    #star-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
       z-index: -2;
     }
-
-    .shooting-star {
-      position: absolute;
-      top: -20%;
-      left: -10%;
-      width: 160px;
-      height: 2px;
-      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.95));
-      border-radius: 999px;
-      transform: rotate(25deg);
-      box-shadow: 0 0 10px rgba(255,255,255,.55);
-      opacity: 0;
-      animation: shoot 7s linear infinite;
-    }
-
-    .shooting-star:nth-child(2) { top: 15%; left: 58%; width: 120px; animation-delay: 1.4s; animation-duration: 8s; }
-    .shooting-star:nth-child(3) { top: 28%; left: 10%; width: 140px; animation-delay: 3.2s; animation-duration: 9s; }
-    .shooting-star:nth-child(4) { top: 8%; left: 72%; width: 110px; animation-delay: 5.1s; animation-duration: 7.5s; }
-
-    @keyframes shoot {
-      0% { transform: translate3d(0,0,0) rotate(25deg); opacity: 0; }
-      8% { opacity: 1; }
-      24% { transform: translate3d(420px, 180px, 0) rotate(25deg); opacity: 0; }
-      100% { transform: translate3d(420px, 180px, 0) rotate(25deg); opacity: 0; }
-    }
+    body.day #star-canvas { display: none; }
 
     .card {
       max-width: 760px;
       text-align: center;
       padding: 40px 28px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(7, 14, 28, 0.28);
-      backdrop-filter: blur(6px);
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      backdrop-filter: blur(8px);
       border-radius: 24px;
-      box-shadow: 0 18px 60px rgba(0,0,0,.28);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+    }
+
+    body.day .card {
+      --panel: rgba(10,30,80,0.32);
+      --panel-border: rgba(255,255,255,0.22);
+      box-shadow: 0 18px 60px rgba(0,15,60,.28);
     }
 
     .eyebrow {
@@ -97,7 +201,7 @@
       font-size: clamp(2.2rem, 6vw, 4.8rem);
       line-height: 1.08;
       font-weight: 700;
-      text-shadow: 0 4px 28px rgba(0,0,0,.32);
+      text-shadow: 0 6px 34px rgba(0,0,0,.6);
     }
 
     .message {
@@ -117,22 +221,26 @@
       letter-spacing: .16em;
       text-transform: uppercase;
       color: var(--accent);
-      background: rgba(216,236,255,.08);
-      border: 1px solid rgba(216,236,255,.18);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 0 18px rgba(255,255,255,.06) inset;
     }
 
     @media (max-width: 640px) {
       .card { padding: 28px 20px; border-radius: 20px; }
       .message { max-width: 26ch; }
+      .mountains { height: 30vh; }
+      .mountains::before { height: 24vh; }
+      .mountains::after { height: 18vh; }
     }
   </style>
 </head>
 <body>
   <main class="scene">
-    <span class="shooting-star" aria-hidden="true"></span>
-    <span class="shooting-star" aria-hidden="true"></span>
-    <span class="shooting-star" aria-hidden="true"></span>
-    <span class="shooting-star" aria-hidden="true"></span>
+    <div class="stars" aria-hidden="true"></div>
+    <div class="mountains" aria-hidden="true"></div>
+    <div class="sun" aria-hidden="true"></div>
+    <canvas id="star-canvas" aria-hidden="true"></canvas>
 
     <section class="card" aria-label="Coming soon message">
       <p class="eyebrow">Nando Labs</p>
@@ -141,5 +249,158 @@
       <div class="soon">Coming Soon</div>
     </section>
   </main>
+
+  <script>
+    // Portugal (Lisbon) timezone: night 20:00–08:00, day 08:00–20:00
+    function getLisbonHour() {
+      return +new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Europe/Lisbon',
+        hour: 'numeric',
+        hour12: false
+      }).format(new Date());
+    }
+
+    function applyTimeOfDay() {
+      const h = getLisbonHour();
+      const night = h >= 20 || h < 8;
+      document.body.classList.toggle('night', night);
+      document.body.classList.toggle('day', !night);
+    }
+
+    applyTimeOfDay();
+    setInterval(applyTimeOfDay, 60_000);
+
+    // Canvas-based shooting stars (night only)
+    (function () {
+      const canvas = document.getElementById('star-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, stars, lastTime;
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      class ShootingStar {
+        constructor(initial) { this._init(initial); }
+
+        _init(initial) {
+          this.waiting = true;
+          this.elapsed = 0;
+          this.progress = 0;
+          this.done = false;
+          this.delay = (initial ? Math.random() * 12 : 3 + Math.random() * 10) * 1000;
+          this._place();
+        }
+
+        _place() {
+          this.startX = W * (0.05 + Math.random() * 0.8);
+          this.startY = H * (0.02 + Math.random() * 0.35);
+          const deg = 22 + Math.random() * 22;
+          this.angle = deg * Math.PI / 180;
+          this.speed = 380 + Math.random() * 420;
+          this.maxTrail = 70 + Math.random() * 160;
+          this.lineWidth = 1 + Math.random() * 1.4;
+          const totalDist = this.maxTrail + Math.max(W, H) * 0.25;
+          this.totalDuration = totalDist / this.speed * 1000;
+        }
+
+        update(dt) {
+          if (this.done) return;
+          if (this.waiting) {
+            this.elapsed += dt;
+            if (this.elapsed >= this.delay) {
+              this.waiting = false;
+              this.elapsed = 0;
+              this._place();
+            }
+            return;
+          }
+          this.elapsed += dt;
+          this.progress = this.elapsed / this.totalDuration;
+          if (this.progress >= 1) this.done = true;
+        }
+
+        draw() {
+          if (this.waiting || this.done) return;
+
+          const dist = (this.elapsed / 1000) * this.speed;
+          const headX = this.startX + Math.cos(this.angle) * dist;
+          const headY = this.startY + Math.sin(this.angle) * dist;
+
+          const p = this.progress;
+          const opacity = p < 0.08 ? p / 0.08
+                        : p > 0.62 ? Math.max(0, 1 - (p - 0.62) / 0.38)
+                        : 1;
+          if (opacity < 0.01) return;
+
+          const trailLen = Math.min(this.maxTrail, dist);
+          const tailX = headX - Math.cos(this.angle) * trailLen;
+          const tailY = headY - Math.sin(this.angle) * trailLen;
+
+          const grad = ctx.createLinearGradient(tailX, tailY, headX, headY);
+          grad.addColorStop(0,    'rgba(200,225,255,0)');
+          grad.addColorStop(0.45, `rgba(210,232,255,${opacity * 0.3})`);
+          grad.addColorStop(0.8,  `rgba(240,248,255,${opacity * 0.72})`);
+          grad.addColorStop(1,    `rgba(255,255,255,${opacity})`);
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(tailX, tailY);
+          ctx.lineTo(headX, headY);
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = this.lineWidth;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+
+          const r = 3 + this.lineWidth * 1.5;
+          const glow = ctx.createRadialGradient(headX, headY, 0, headX, headY, r * 3.5);
+          glow.addColorStop(0,    `rgba(255,255,255,${opacity})`);
+          glow.addColorStop(0.35, `rgba(210,235,255,${opacity * 0.55})`);
+          glow.addColorStop(1,    'rgba(180,220,255,0)');
+          ctx.beginPath();
+          ctx.arc(headX, headY, r * 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = glow;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function loop(ts) {
+        requestAnimationFrame(loop);
+
+        if (document.body.classList.contains('day')) {
+          ctx.clearRect(0, 0, W, H);
+          lastTime = ts;
+          return;
+        }
+
+        const dt = lastTime == null ? 0 : ts - lastTime;
+        lastTime = ts;
+
+        ctx.clearRect(0, 0, W, H);
+        for (const s of stars) {
+          s.update(dt);
+          s.draw();
+          if (s.done) s._init(false);
+        }
+      }
+
+      function init() {
+        resize();
+        stars = Array.from({ length: 6 }, (_, i) => new ShootingStar(true));
+        lastTime = null;
+        requestAnimationFrame(loop);
+      }
+
+      window.addEventListener('resize', resize);
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
 </body>
 </html>
