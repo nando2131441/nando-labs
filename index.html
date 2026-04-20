@@ -226,6 +226,83 @@
       box-shadow: 0 0 18px rgba(255,255,255,.06) inset;
     }
 
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+    }
+
+    .nav-toggle {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: rgba(247,248,252,.88);
+      border-radius: 999px;
+      transition: transform .22s ease, opacity .2s ease;
+      transform-origin: center;
+    }
+
+    .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 160px;
+      background: rgba(255,255,255,.07);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 14px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .nav-menu.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .nav-link {
+      display: block;
+      padding: 10px 14px;
+      color: rgba(247,248,252,.82);
+      text-decoration: none;
+      font-size: 14px;
+      border-radius: 8px;
+      letter-spacing: .02em;
+      transition: background .14s, color .14s;
+    }
+
+    .nav-link:hover { background: rgba(255,255,255,.1); color: #fff; }
+    .nav-link.active { background: rgba(255,255,255,.12); color: #fff; }
+
     @media (max-width: 640px) {
       .card { padding: 28px 20px; border-radius: 20px; }
       .message { max-width: 26ch; }
@@ -236,6 +313,15 @@
   </style>
 </head>
 <body>
+  <nav class="nav" aria-label="Main navigation">
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-menu" id="nav-menu" role="menu">
+      <a href="/" class="nav-link active" role="menuitem">Home</a>
+      <a href="/aboutme/" class="nav-link" role="menuitem">About me</a>
+    </div>
+  </nav>
   <main class="scene">
     <div class="stars" aria-hidden="true"></div>
     <div class="mountains" aria-hidden="true"></div>
@@ -400,6 +486,32 @@
       } else {
         init();
       }
+    })();
+
+    // Navigation toggle
+    (function () {
+      const toggle = document.getElementById('nav-toggle');
+      const menu   = document.getElementById('nav-menu');
+
+      toggle.addEventListener('click', () => {
+        const open = menu.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open);
+      });
+
+      document.addEventListener('click', e => {
+        if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          menu.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.focus();
+        }
+      });
     })();
   </script>
 </body>
