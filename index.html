@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nando Labs</title>
+  <style>
+    :root {
+      --text: #f5f7fb;
+      --muted: rgba(245,247,251,.82);
+      --overlay: rgba(4, 10, 22, 0.55);
+      --overlay-strong: rgba(4, 10, 22, 0.7);
+      --accent: #d8ecff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      overflow: hidden;
+      background:
+        linear-gradient(var(--overlay), var(--overlay-strong)),
+        url('https://images.unsplash.com/photo-1755544510970-a7011e59d251?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat fixed;
+    }
+
+    .scene {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      isolation: isolate;
+    }
+
+    .scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.25) 0 1px, transparent 1px),
+        radial-gradient(circle at 70% 30%, rgba(255,255,255,.18) 0 1px, transparent 1px),
+        radial-gradient(circle at 40% 75%, rgba(255,255,255,.2) 0 1px, transparent 1px),
+        radial-gradient(circle at 85% 60%, rgba(255,255,255,.16) 0 1px, transparent 1px),
+        radial-gradient(circle at 55% 50%, rgba(255,255,255,.18) 0 1px, transparent 1px);
+      background-size: 280px 280px, 340px 340px, 300px 300px, 380px 380px, 240px 240px;
+      opacity: .85;
+      z-index: -2;
+    }
+
+    .shooting-star {
+      position: absolute;
+      top: -20%;
+      left: -10%;
+      width: 160px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.95));
+      border-radius: 999px;
+      transform: rotate(25deg);
+      box-shadow: 0 0 10px rgba(255,255,255,.55);
+      opacity: 0;
+      animation: shoot 7s linear infinite;
+    }
+
+    .shooting-star:nth-child(2) { top: 15%; left: 58%; width: 120px; animation-delay: 1.4s; animation-duration: 8s; }
+    .shooting-star:nth-child(3) { top: 28%; left: 10%; width: 140px; animation-delay: 3.2s; animation-duration: 9s; }
+    .shooting-star:nth-child(4) { top: 8%; left: 72%; width: 110px; animation-delay: 5.1s; animation-duration: 7.5s; }
+
+    @keyframes shoot {
+      0% { transform: translate3d(0,0,0) rotate(25deg); opacity: 0; }
+      8% { opacity: 1; }
+      24% { transform: translate3d(420px, 180px, 0) rotate(25deg); opacity: 0; }
+      100% { transform: translate3d(420px, 180px, 0) rotate(25deg); opacity: 0; }
+    }
+
+    .card {
+      max-width: 760px;
+      text-align: center;
+      padding: 40px 28px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(7, 14, 28, 0.28);
+      backdrop-filter: blur(6px);
+      border-radius: 24px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.28);
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 6vw, 4.8rem);
+      line-height: 1.08;
+      font-weight: 700;
+      text-shadow: 0 4px 28px rgba(0,0,0,.32);
+    }
+
+    .message {
+      margin: 18px auto 0;
+      max-width: 32ch;
+      font-size: clamp(1rem, 2.3vw, 1.25rem);
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .soon {
+      margin-top: 28px;
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: .95rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(216,236,255,.08);
+      border: 1px solid rgba(216,236,255,.18);
+    }
+
+    @media (max-width: 640px) {
+      .card { padding: 28px 20px; border-radius: 20px; }
+      .message { max-width: 26ch; }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <span class="shooting-star" aria-hidden="true"></span>
+    <span class="shooting-star" aria-hidden="true"></span>
+    <span class="shooting-star" aria-hidden="true"></span>
+    <span class="shooting-star" aria-hidden="true"></span>
+
+    <section class="card" aria-label="Coming soon message">
+      <p class="eyebrow">Nando Labs</p>
+      <h1>Great things grow in quiet moments before they shine.</h1>
+      <p class="message">We are building something thoughtful, calm, and full of possibility. Stay close while the first light comes into view.</p>
+      <div class="soon">Coming Soon</div>
+    </section>
+  </main>
+</body>
+</html>
