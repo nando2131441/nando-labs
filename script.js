@@ -8,6 +8,12 @@ function getLisbonHour() {
 }
 
 function applyTimeOfDay() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.body.classList.toggle('day',   saved === 'light');
+    document.body.classList.toggle('night', saved === 'dark');
+    return;
+  }
   const h = getLisbonHour();
   const night = h >= 20 || h < 8;
   document.body.classList.toggle('night', night);
@@ -16,6 +22,16 @@ function applyTimeOfDay() {
 
 applyTimeOfDay();
 setInterval(applyTimeOfDay, 60_000);
+
+// Theme toggle
+(function () {
+  const btn = document.getElementById('theme-toggle');
+  btn.addEventListener('click', () => {
+    const isLight = document.body.classList.contains('day');
+    localStorage.setItem('theme', isLight ? 'dark' : 'light');
+    applyTimeOfDay();
+  });
+})();
 
 // Canvas-based shooting stars (night only)
 (function () {

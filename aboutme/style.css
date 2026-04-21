@@ -209,6 +209,122 @@ body.day #star-canvas { display: none; }
 .nav-link:hover  { background: rgba(255,255,255,.1); color: #fff; }
 .nav-link.active { background: rgba(255,255,255,.12); color: #fff; }
 
+/* Theme toggle */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  color: rgba(247,248,252,.88);
+  transition: background .15s, border-color .15s, color .15s;
+}
+
+.theme-toggle:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.25); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .icon-sun  { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+body.light .theme-toggle { background: rgba(15,23,42,.07); border-color: rgba(15,23,42,.15); color: rgba(15,23,42,.75); }
+body.light .theme-toggle:hover { background: rgba(15,23,42,.13); }
+body.light .theme-toggle .icon-sun  { display: block; }
+body.light .theme-toggle .icon-moon { display: none; }
+
+/* ── Light mode ─────────────────────────────────── */
+body.light {
+  --text: #0f172a;
+  --muted: rgba(15,23,42,0.62);
+  --accent: #312e81;
+  --panel: rgba(255,255,255,0.72);
+  --panel-border: rgba(15,23,42,0.1);
+  background: #eef2ff;
+}
+
+body.light .bg-layer {
+  background:
+    radial-gradient(ellipse 110% 70% at -5% 5%,  rgba(147,197,253,.42) 0%, transparent 55%),
+    radial-gradient(ellipse 80%  65% at 105% 8%,  rgba(196,181,253,.36) 0%, transparent 52%),
+    radial-gradient(ellipse 90%  75% at 75% 105%, rgba(110,231,183,.26) 0%, transparent 55%),
+    radial-gradient(ellipse 55%  55% at 8%  92%,  rgba(199,210,254,.30) 0%, transparent 50%),
+    radial-gradient(ellipse 60%  50% at 50% 48%,  rgba(224,231,255,.55) 0%, transparent 70%),
+    #eef2ff;
+}
+
+body.light .bg-layer::before {
+  background-image: radial-gradient(circle, rgba(15,23,42,.055) 1px, transparent 1px);
+}
+
+body.light .stars::before {
+  background: linear-gradient(135deg, rgba(99,102,241,.14), rgba(147,197,253,.09));
+}
+
+body.light .stars::after {
+  background: linear-gradient(135deg, rgba(167,139,250,.12), rgba(52,211,153,.08));
+}
+
+body.light .mountains {
+  background: linear-gradient(180deg, transparent 0%, rgba(167,139,250,.20) 40%, rgba(139,92,246,.38) 100%);
+}
+
+body.light .mountains::before {
+  background: linear-gradient(180deg, transparent 0%, rgba(167,139,250,.16) 50%, rgba(139,92,246,.28) 100%);
+}
+
+body.light .mountains::after {
+  background: rgba(224,231,255,.60);
+}
+
+body.light .nav-toggle { background: rgba(15,23,42,.07); border-color: rgba(15,23,42,.15); }
+body.light .nav-toggle span { background: rgba(15,23,42,.78); }
+body.light .nav-menu { background: rgba(255,255,255,.88); border-color: rgba(15,23,42,.12); backdrop-filter: blur(14px); }
+body.light .nav-link { color: rgba(15,23,42,.72); }
+body.light .nav-link:hover  { background: rgba(15,23,42,.06); color: #0f172a; }
+body.light .nav-link.active { background: rgba(15,23,42,.08); color: #0f172a; }
+
+body.light .section { box-shadow: 0 12px 48px rgba(15,23,42,.08); }
+
+body.light .pill { background: rgba(15,23,42,.06); border-color: rgba(15,23,42,.12); color: rgba(15,23,42,.78); }
+body.light .pill.placeholder { color: rgba(15,23,42,.35); }
+
+body.light .skill-label { color: rgba(15,23,42,.5); }
+body.light .section h2    { color: rgba(15,23,42,.5); }
+
+body.light .tl-entry { border-left-color: rgba(15,23,42,.15); }
+body.light .tl-entry::before { background: rgba(15,23,42,.28); }
+body.light .tl-org  { color: var(--text); }
+body.light .tl-role { color: var(--muted); }
+body.light .tl-date { color: rgba(15,23,42,.38); }
+
+body.light .exp-company-header { border-bottom-color: rgba(15,23,42,.1); }
+body.light .exp-projects { border-left-color: rgba(15,23,42,.15); }
+body.light .exp-project::before { background: rgba(99,102,241,.65); border-color: rgba(99,102,241,.22); box-shadow: 0 0 8px rgba(99,102,241,.2); }
+body.light .exp-project-name { color: var(--text); }
+body.light .exp-project .tl-role { color: rgba(15,23,42,.42); }
+body.light .exp-badge--current { background: rgba(99,102,241,.1); border-color: rgba(99,102,241,.28); color: rgba(67,56,202,.9); }
+
+body.light .tl-desc-list li { color: var(--muted); }
+body.light .tl-desc-list li::before { background: rgba(99,102,241,.45); }
+
+body.light .contact-link { color: rgba(15,23,42,.72); }
+body.light .contact-link:hover { color: #0f172a; }
+body.light .contact-link .icon { background: rgba(15,23,42,.06); border-color: rgba(15,23,42,.12); }
+
+body.light .hero-link { color: var(--accent); background: rgba(15,23,42,.05); border-color: rgba(15,23,42,.14); }
+body.light .hero-link:hover { background: rgba(15,23,42,.1); border-color: rgba(15,23,42,.22); }
+body.light .scroll-hint { color: rgba(15,23,42,.5); }
+body.light .scroll-hint::after { background: linear-gradient(180deg, rgba(15,23,42,.4), transparent); }
+body.light .placeholder { color: rgba(15,23,42,.32); }
+
 /* Content */
 .content {
   position: relative;

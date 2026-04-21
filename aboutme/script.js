@@ -1,21 +1,19 @@
-// Portugal (Lisbon) timezone: night 20:00–08:00, day 08:00–20:00
-function getLisbonHour() {
-  return +new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Europe/Lisbon',
-    hour: 'numeric',
-    hour12: false
-  }).format(new Date());
+function applyTheme() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  document.body.classList.toggle('light', saved === 'light');
 }
 
-function applyTimeOfDay() {
-  const h = getLisbonHour();
-  const night = h >= 20 || h < 8;
-  document.body.classList.toggle('night', night);
-  document.body.classList.toggle('day', !night);
-}
+applyTheme();
 
-applyTimeOfDay();
-setInterval(applyTimeOfDay, 60_000);
+// Theme toggle
+(function () {
+  const btn = document.getElementById('theme-toggle');
+  btn.addEventListener('click', () => {
+    const isLight = document.body.classList.contains('light');
+    localStorage.setItem('theme', isLight ? 'dark' : 'light');
+    applyTheme();
+  });
+})();
 
 // Canvas shooting stars
 (function () {

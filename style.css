@@ -296,6 +296,37 @@ h1 {
 .nav-link:hover { background: rgba(255,255,255,.1); color: #fff; }
 .nav-link.active { background: rgba(255,255,255,.12); color: #fff; }
 
+/* Theme toggle */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  color: rgba(247,248,252,.88);
+  transition: background .15s, border-color .15s;
+}
+
+.theme-toggle:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.25); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .icon-sun  { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+body.day .theme-toggle { background: rgba(10,30,80,.1); border-color: rgba(10,30,80,.18); color: rgba(10,30,80,.75); }
+body.day .theme-toggle:hover { background: rgba(10,30,80,.16); }
+body.day .theme-toggle .icon-sun  { display: block; }
+body.day .theme-toggle .icon-moon { display: none; }
+
 @media (max-width: 640px) {
   .card { padding: 28px 20px; border-radius: 20px; }
   .message { max-width: 26ch; }
