@@ -17,7 +17,7 @@ function applyTimeOfDay() {
 applyTimeOfDay();
 setInterval(applyTimeOfDay, 60_000);
 
-// Canvas-based shooting stars (night only)
+// Canvas shooting stars
 (function () {
   const canvas = document.getElementById('star-canvas');
   const ctx = canvas.getContext('2d');
@@ -70,27 +70,20 @@ setInterval(applyTimeOfDay, 60_000);
 
     draw() {
       if (this.waiting || this.done) return;
-
       const dist = (this.elapsed / 1000) * this.speed;
       const headX = this.startX + Math.cos(this.angle) * dist;
       const headY = this.startY + Math.sin(this.angle) * dist;
-
       const p = this.progress;
-      const opacity = p < 0.08 ? p / 0.08
-                    : p > 0.62 ? Math.max(0, 1 - (p - 0.62) / 0.38)
-                    : 1;
+      const opacity = p < 0.08 ? p / 0.08 : p > 0.62 ? Math.max(0, 1 - (p - 0.62) / 0.38) : 1;
       if (opacity < 0.01) return;
-
       const trailLen = Math.min(this.maxTrail, dist);
       const tailX = headX - Math.cos(this.angle) * trailLen;
       const tailY = headY - Math.sin(this.angle) * trailLen;
-
       const grad = ctx.createLinearGradient(tailX, tailY, headX, headY);
       grad.addColorStop(0,    'rgba(200,225,255,0)');
       grad.addColorStop(0.45, `rgba(210,232,255,${opacity * 0.3})`);
       grad.addColorStop(0.8,  `rgba(240,248,255,${opacity * 0.72})`);
       grad.addColorStop(1,    `rgba(255,255,255,${opacity})`);
-
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(tailX, tailY);
@@ -99,7 +92,6 @@ setInterval(applyTimeOfDay, 60_000);
       ctx.lineWidth = this.lineWidth;
       ctx.lineCap = 'round';
       ctx.stroke();
-
       const r = 3 + this.lineWidth * 1.5;
       const glow = ctx.createRadialGradient(headX, headY, 0, headX, headY, r * 3.5);
       glow.addColorStop(0,    `rgba(255,255,255,${opacity})`);
@@ -115,16 +107,13 @@ setInterval(applyTimeOfDay, 60_000);
 
   function loop(ts) {
     requestAnimationFrame(loop);
-
     if (document.body.classList.contains('day')) {
       ctx.clearRect(0, 0, W, H);
       lastTime = ts;
       return;
     }
-
     const dt = lastTime == null ? 0 : ts - lastTime;
     lastTime = ts;
-
     ctx.clearRect(0, 0, W, H);
     for (const s of stars) {
       s.update(dt);
@@ -135,13 +124,12 @@ setInterval(applyTimeOfDay, 60_000);
 
   function init() {
     resize();
-    stars = Array.from({ length: 6 }, (_, i) => new ShootingStar(true));
+    stars = Array.from({ length: 6 }, () => new ShootingStar(true));
     lastTime = null;
     requestAnimationFrame(loop);
   }
 
   window.addEventListener('resize', resize);
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
