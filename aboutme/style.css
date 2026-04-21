@@ -695,6 +695,23 @@ p:last-child { margin-bottom: 0; }
 
 .contact-link .icon svg { width: 16px; height: 16px; }
 
+/* Scroll animations */
+.anim-item {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .6s cubic-bezier(.22,.68,0,1.2), transform .6s cubic-bezier(.22,.68,0,1.2);
+  transition-delay: var(--anim-delay, 0ms);
+}
+
+.anim-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-item { transition: none; opacity: 1; transform: none; }
+}
+
 @media (max-width: 640px) {
   .content { padding: 0 16px 32vh; }
   .section  { padding: 24px 18px; border-radius: 16px; }

@@ -135,6 +135,45 @@ applyTheme();
   }
 })();
 
+// Scroll animations
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    });
+  }, { threshold: 0.1 });
+
+  function watch(el, delay) {
+    el.classList.add('anim-item');
+    if (delay) el.style.setProperty('--anim-delay', delay + 'ms');
+    observer.observe(el);
+  }
+
+  // Hero children stagger in on load
+  document.querySelectorAll('.hero > *').forEach((el, i) => watch(el, i * 85));
+
+  // Section cards slide up
+  document.querySelectorAll('.section').forEach(el => watch(el));
+
+  // Pills stagger within each group
+  document.querySelectorAll('.pills').forEach(group => {
+    group.querySelectorAll('.pill').forEach((el, i) => watch(el, i * 40));
+  });
+
+  // Experience project entries stagger
+  document.querySelectorAll('.exp-project').forEach((el, i) => watch(el, i * 90));
+
+  // Education timeline entries stagger
+  document.querySelectorAll('.tl-entry').forEach((el, i) => watch(el, i * 80));
+
+  // Contact links stagger
+  document.querySelectorAll('.contact-link').forEach((el, i) => watch(el, i * 70));
+})();
+
 // Navigation toggle
 (function () {
   const toggle = document.getElementById('nav-toggle');
