@@ -65,6 +65,8 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
 const IPMA_BASE = 'https://api.ipma.pt/open-data';
 const STORAGE_KEY = 'weather_default_city';
 const DEFAULT_ID  = 1110600; // Lisboa
+// Mainland Portugal only. If you want islands too, remove this filter.
+const MAINLAND_REGION_ID = 1;
 
 const DISTRICT_NAMES = {
   1:'Aveiro',2:'Beja',3:'Braga',4:'Bragança',5:'Castelo Branco',
@@ -254,14 +256,19 @@ let currentCity  = null;
 function populateCityList(filter = '') {
   const list = document.getElementById('city-list');
   const q = filter.toLowerCase().trim();
+
   const filtered = q
-    ? allLocations.filter(l => l.local.toLowerCase().includes(q))
+    ? allLocations.filter(l =>
+        l.local.toLowerCase().includes(q) ||
+        (DISTRICT_NAMES[l.idDistrito] || '').toLowerCase().includes(q)
+      )
     : allLocations;
 
   if (filtered.length === 0) {
     list.innerHTML = `<li class="city-no-results">No cities match "${esc(filter)}"</li>`;
     return;
   }
+
   list.innerHTML = filtered.map(l => {
     const isCurrent = currentCity && l.globalIdLocal === currentCity.globalIdLocal;
     return `<li class="city-list-item${isCurrent ? ' selected' : ''}"
@@ -311,7 +318,7 @@ function updateLocationDisplay(loc) {
   btn.disabled = isDefault;
 
   const warningsArea = document.getElementById('warnings-area');
-  warningsArea.textContent = `Warning zone: ${loc.idAreaAviso} — ${loc.local}`;
+  warningsArea.textContent = `Warning area: ${DISTRICT_NAMES[loc.idDistrito] || loc.local}`;
 }
 
 async function selectCity(loc) {
@@ -459,19 +466,29 @@ function warningCardHTML(w) {
 
 // ── Init ─────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
-  // Load all IPMA forecast locations
   try {
     const res = await fetch(`${IPMA_BASE}/distrits-islands.json`);
-    allLocations = await res.json();
-    allLocations.sort((a, b) => a.local.localeCompare(b.local, 'pt'));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const payload = await res.json();
+    allLocations = Array.isArray(payload.data) ? payload.data : [];
+
+    allLocations = allLocations
+      .filter(loc => loc.idRegiao === MAINLAND_REGION_ID)
+      .sort((a, b) => a.local.localeCompare(b.local, 'pt'));
   } catch (e) {
     console.error('Failed to load IPMA locations', e);
+    showError(
+      document.getElementById('forecast-grid'),
+      'Could not load city list from IPMA.',
+      () => window.location.reload()
+    );
+    return;
   }
 
-  // Determine starting city: saved default → geolocation → Lisboa
-  const savedId  = localStorage.getItem(STORAGE_KEY);
-  let startCity  = allLocations.find(l => l.globalIdLocal === +(savedId || DEFAULT_ID))
-                || allLocations.find(l => l.globalIdLocal === DEFAULT_ID);
+  const savedId = localStorage.getItem(STORAGE_KEY);
+  let startCity = allLocations.find(l => l.globalIdLocal === +(savedId || DEFAULT_ID))
+               || allLocations.find(l => l.globalIdLocal === DEFAULT_ID);
 
   if (!savedId && navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -486,7 +503,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await selectCity(startCity);
 
-  // City picker toggle
   const changeCityBtn = document.getElementById('change-city-btn');
   changeCityBtn.addEventListener('click', e => {
     e.stopPropagation();
@@ -494,19 +510,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     picker.hidden ? openPicker() : closePicker();
   });
 
-  // Close picker on outside click
   document.addEventListener('click', e => {
     const picker = document.getElementById('city-picker');
     const section = document.querySelector('.location-section');
     if (!picker.hidden && !section.contains(e.target)) closePicker();
   });
 
-  // City search filter
   document.getElementById('city-search').addEventListener('input', e => {
     populateCityList(e.target.value);
   });
 
-  // Set as default
+  document.getElementById('city-search').addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closePicker();
+      document.getElementById('change-city-btn').focus();
+    }
+  });
+
   document.getElementById('set-default-btn').addEventListener('click', () => {
     if (!currentCity) return;
     localStorage.setItem(STORAGE_KEY, String(currentCity.globalIdLocal));
