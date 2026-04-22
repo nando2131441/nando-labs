@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weather — Nando Labs</title>
+  <link rel="stylesheet" href="/weather/style.css">
+</head>
+<body>
+  <div class="bg-layer" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="mountains"></div>
+    <div class="sun"></div>
+    <canvas id="star-canvas"></canvas>
+  </div>
+
+  <nav class="nav" aria-label="Main navigation">
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-menu" id="nav-menu" role="menu">
+      <a href="/" class="nav-link" role="menuitem">Home</a>
+      <a href="/aboutme/" class="nav-link" role="menuitem">About me</a>
+      <a href="/space/" class="nav-link" role="menuitem">Space</a>
+      <a href="/weather/" class="nav-link active" role="menuitem">Weather</a>
+    </div>
+  </nav>
+
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+
+  <main class="weather-main">
+
+    <!-- ── Location ──────────────────────────────────────── -->
+    <section class="location-section" aria-label="Current location">
+      <div class="location-card" id="location-card">
+        <div class="location-left">
+          <svg class="location-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <div class="location-info">
+            <h1 class="location-name" id="city-name">
+              <span class="sk sk-name" aria-hidden="true"></span>
+            </h1>
+            <p class="location-region" id="city-region"></p>
+          </div>
+        </div>
+        <div class="location-actions">
+          <button class="btn-outline" id="change-city-btn" aria-expanded="false" aria-controls="city-picker">
+            Change city
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><polyline points="4,6 8,10 12,6"/></svg>
+          </button>
+          <button class="btn-outline btn-default-city" id="set-default-btn">Set as default</button>
+        </div>
+      </div>
+
+      <div id="city-picker" class="city-picker" hidden aria-label="Select a city">
+        <div class="city-search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="city-search" class="city-search-input" placeholder="Search city in Portugal…" autocomplete="off" spellcheck="false" aria-label="Search for a city">
+        </div>
+        <ul id="city-list" class="city-list" role="listbox" aria-label="Cities in Portugal"></ul>
+      </div>
+    </section>
+
+    <!-- ── Warnings ───────────────────────────────────────── -->
+    <section class="section warnings-section" aria-labelledby="warnings-heading">
+      <div class="section-intro">
+        <div class="section-title-group">
+          <h2 id="warnings-heading" class="section-title">Meteorological Warnings</h2>
+          <p class="section-desc" id="warnings-area"></p>
+        </div>
+      </div>
+      <div id="warnings-content" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <!-- ── 5-Day Forecast ─────────────────────────────────── -->
+    <section class="section forecast-section" aria-labelledby="forecast-heading">
+      <div class="section-intro">
+        <div class="section-title-group">
+          <h2 id="forecast-heading" class="section-title">5-Day Forecast</h2>
+          <p class="section-desc">Showing conditions for <strong id="forecast-city-name">—</strong></p>
+        </div>
+      </div>
+      <div id="forecast-grid" class="forecast-grid" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <footer class="page-footer">
+      <p>Weather data provided by <a href="https://www.ipma.pt" target="_blank" rel="noopener noreferrer">IPMA — Instituto Português do Mar e da Atmosfera</a></p>
+    </footer>
+
+  </main>
+
+  <script src="/weather/script.js"></script>
+</body>
+</html>
