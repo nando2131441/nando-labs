@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Space — Nando Labs</title>
+  <link rel="stylesheet" href="/space/style.css">
+</head>
+<body>
+  <div class="bg-layer" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="mountains"></div>
+    <div class="sun"></div>
+    <canvas id="star-canvas"></canvas>
+  </div>
+
+  <nav class="nav" aria-label="Main navigation">
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-menu" id="nav-menu" role="menu">
+      <a href="/" class="nav-link" role="menuitem">Home</a>
+      <a href="/aboutme/" class="nav-link" role="menuitem">About me</a>
+      <a href="/space/" class="nav-link active" role="menuitem">Space</a>
+    </div>
+  </nav>
+
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle colour scheme">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+
+  <main class="space-main">
+
+    <header class="page-header">
+      <p class="eyebrow">Nando Labs &times; NASA</p>
+      <h1 class="page-title">Space</h1>
+      <p class="page-subtitle">Live data from NASA's open APIs</p>
+    </header>
+
+    <!-- ── Picture of the Day ───────────────────────── -->
+    <section class="section apod-section" aria-labelledby="apod-heading">
+      <div class="section-intro">
+        <div class="section-title-group">
+          <h2 id="apod-heading" class="section-title">Picture of the Day</h2>
+          <p class="section-desc">NASA's Astronomy Picture of the Day — updated daily</p>
+        </div>
+        <div class="apod-controls">
+          <label for="apod-date" class="control-label">Date</label>
+          <input type="date" id="apod-date" class="date-input" aria-label="Select date for picture of the day">
+        </div>
+      </div>
+      <div id="apod-content" class="apod-content" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <!-- ── Near Earth Asteroids ──────────────────────── -->
+    <section class="section neo-section" aria-labelledby="neo-heading">
+      <div class="section-intro">
+        <div class="section-title-group">
+          <h2 id="neo-heading" class="section-title">Near Earth Asteroids</h2>
+          <p class="section-desc">Asteroids with close Earth approaches — max 7-day window</p>
+        </div>
+        <div class="neo-controls-wrap">
+          <div class="neo-controls">
+            <div class="date-range-inputs">
+              <div class="date-field">
+                <label for="neo-start" class="control-label">From</label>
+                <input type="date" id="neo-start" class="date-input">
+              </div>
+              <span class="date-sep" aria-hidden="true">&#8594;</span>
+              <div class="date-field">
+                <label for="neo-end" class="control-label">To</label>
+                <input type="date" id="neo-end" class="date-input">
+              </div>
+            </div>
+            <button id="neo-search" class="btn-primary">Search</button>
+          </div>
+          <p id="neo-date-error" class="field-error" hidden></p>
+        </div>
+      </div>
+      <div id="neo-summary" aria-live="polite"></div>
+      <div id="neo-grid" class="neo-grid" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <footer class="page-footer">
+      <p>Data provided by <a href="https://api.nasa.gov" target="_blank" rel="noopener noreferrer">NASA Open APIs</a></p>
+    </footer>
+
+  </main>
+
+  <script src="/space/config.js"></script>
+  <script src="/space/script.js"></script>
+</body>
+</html>
