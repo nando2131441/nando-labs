@@ -420,6 +420,9 @@ async function loadWarnings(idAreaAviso) {
 }
 
 function renderWarnings(warnings, el, idAreaAviso) {
+  const SHOWN_LEVELS = new Set(['red', 'orange', 'yellow']);
+  warnings = warnings.filter(w => SHOWN_LEVELS.has((w.awarenessLevelID || '').toLowerCase()));
+
   if (warnings.length === 0) {
     el.innerHTML = `<div class="no-warnings">
       <div class="no-warnings-icon">
@@ -434,8 +437,8 @@ function renderWarnings(warnings, el, idAreaAviso) {
     return;
   }
 
-  // Sort by level severity: red > orange > yellow > green
-  const order = { red: 0, orange: 1, yellow: 2, green: 3 };
+  // Sort by level severity: red > orange > yellow
+  const order = { red: 0, orange: 1, yellow: 2 };
   warnings.sort((a, b) => (order[a.awarenessLevelID] ?? 9) - (order[b.awarenessLevelID] ?? 9));
 
   el.innerHTML = `<div class="warnings-list">${warnings.map(w => warningCardHTML(w)).join('')}</div>`;

@@ -359,6 +359,121 @@ function asteroidCardHTML(a) {
   </div>`;
 }
 
+// ── EPIC ────────────────────────────────────────────────────────────────
+function epicSkeletonHTML() {
+  return `<div class="epic-viewer" aria-hidden="true">
+    <div class="epic-globe-wrap">
+      <div class="sk epic-globe-sk"></div>
+      <div class="epic-nav">
+        <div class="sk epic-nav-sk"></div>
+        <div class="sk epic-counter-sk"></div>
+        <div class="sk epic-nav-sk"></div>
+      </div>
+    </div>
+    <div class="epic-info">
+      <div class="sk sk-title" style="width:55%;height:34px;margin-bottom:4px"></div>
+      <div class="sk sk-line sk-short" style="width:30%"></div>
+      <div class="sk sk-line" style="margin-top:8px"></div>
+      <div class="sk sk-line"></div>
+      <div class="sk sk-line sk-short"></div>
+    </div>
+  </div>`;
+}
+
+function epicImageURL(img) {
+  const [datePart] = img.date.split(' ');
+  const [y, m, d] = datePart.split('-');
+  return `https://api.nasa.gov/EPIC/archive/natural/${y}/${m}/${d}/png/${img.image}.png?api_key=${API_KEY}`;
+}
+
+async function loadEPIC(date) {
+  const wrap = document.getElementById('epic-content');
+  wrap.innerHTML = epicSkeletonHTML();
+  try {
+    const url = date
+      ? `${NASA_BASE}/EPIC/api/natural/date/${date}?api_key=${API_KEY}`
+      : `${NASA_BASE}/EPIC/api/natural?api_key=${API_KEY}`;
+    const res  = await fetch(url);
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.msg || body.error?.message || `HTTP ${res.status}`);
+    if (!Array.isArray(body) || body.length === 0) throw new Error('No imagery available for this date — try an earlier date.');
+    renderEPIC(body, wrap);
+  } catch (err) {
+    showError(wrap, `Could not load EPIC imagery — ${err.message}`, () => loadEPIC(date));
+  }
+}
+
+function renderEPIC(images, wrap) {
+  let idx = 0;
+
+  wrap.innerHTML = `<div class="epic-viewer">
+    <div class="epic-globe-wrap">
+      <div class="epic-globe-frame">
+        <img class="epic-globe" id="epic-img" alt="" loading="lazy">
+      </div>
+      <div class="epic-nav">
+        <button class="epic-nav-btn" id="epic-prev" aria-label="Previous image">&#8592;</button>
+        <span class="epic-counter" id="epic-counter"></span>
+        <button class="epic-nav-btn" id="epic-next" aria-label="Next image">&#8594;</button>
+      </div>
+    </div>
+    <div class="epic-info" id="epic-info-panel"></div>
+  </div>`;
+
+  const imgEl     = document.getElementById('epic-img');
+  const counter   = document.getElementById('epic-counter');
+  const prevBtn   = document.getElementById('epic-prev');
+  const nextBtn   = document.getElementById('epic-next');
+  const infoPanel = document.getElementById('epic-info-panel');
+
+  function update() {
+    const img = images[idx];
+    const [datePart, timePart] = img.date.split(' ');
+    const lat = img.centroid_coordinates?.lat != null ? (+img.centroid_coordinates.lat).toFixed(2) : '—';
+    const lon = img.centroid_coordinates?.lon != null ? (+img.centroid_coordinates.lon).toFixed(2) : '—';
+
+    imgEl.style.opacity = '0';
+    imgEl.onload  = () => { imgEl.style.opacity = '1'; };
+    imgEl.onerror = () => { imgEl.style.opacity = '0.4'; };
+    imgEl.src = epicImageURL(img);
+    imgEl.alt = `Earth from EPIC camera, ${fmtDate(datePart)}`;
+
+    counter.textContent = `${idx + 1} / ${images.length}`;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === images.length - 1;
+
+    infoPanel.innerHTML = `
+      <div class="epic-datetime">
+        <span class="epic-date">${esc(fmtDate(datePart))}</span>
+        <span class="epic-time">${timePart ? esc(timePart.slice(0, 5)) + ' UTC' : ''}</span>
+      </div>
+      <p class="epic-caption">${esc(img.caption)}</p>
+      <div class="epic-meta-grid">
+        <div class="epic-meta-item">
+          <span class="epic-meta-key">Latitude</span>
+          <span class="epic-meta-val">${esc(lat)}°</span>
+        </div>
+        <div class="epic-meta-item">
+          <span class="epic-meta-key">Longitude</span>
+          <span class="epic-meta-val">${esc(lon)}°</span>
+        </div>
+        <div class="epic-meta-item">
+          <span class="epic-meta-key">Camera</span>
+          <span class="epic-meta-val">EPIC / DSCOVR</span>
+        </div>
+        <div class="epic-meta-item">
+          <span class="epic-meta-key">Daily image</span>
+          <span class="epic-meta-val">${idx + 1} of ${images.length}</span>
+        </div>
+      </div>`;
+  }
+
+  prevBtn.addEventListener('click', () => { if (idx > 0)                   { idx--; update(); } });
+  nextBtn.addEventListener('click', () => { if (idx < images.length - 1)   { idx++; update(); } });
+
+  update();
+}
+
 // ── Init ────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const t = todayStr();
@@ -372,10 +487,18 @@ document.addEventListener('DOMContentLoaded', () => {
   apodDate.addEventListener('change', () => { if (apodDate.value) loadAPOD(apodDate.value); });
 
   // Asteroids setup
-  const neoStart  = document.getElementById('neo-start');
-  const neoEnd    = document.getElementById('neo-end');
-  const neoErr    = document.getElementById('neo-date-error');
-  const neoSearch = document.getElementById('neo-search');
+  const neoStart     = document.getElementById('neo-start');
+  const neoEnd       = document.getElementById('neo-end');
+  const neoErr       = document.getElementById('neo-date-error');
+  const neoSearch    = document.getElementById('neo-search');
+  const neoHazardBtn = document.getElementById('neo-hazard-filter');
+  const neoGrid      = document.getElementById('neo-grid');
+
+  neoHazardBtn.addEventListener('click', () => {
+    const active = neoGrid.classList.toggle('filter-hazardous');
+    neoHazardBtn.setAttribute('aria-pressed', String(active));
+    neoHazardBtn.classList.toggle('active', active);
+  });
 
   neoStart.value = t;
   neoEnd.value   = addDays(t, 7);
@@ -404,5 +527,16 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     loadAsteroids(s, e);
+  });
+
+  // EPIC setup
+  const epicDate = document.getElementById('epic-date');
+  const epicView = document.getElementById('epic-view');
+  epicDate.value = t;
+  epicDate.max   = t;
+  loadEPIC(null);
+
+  epicView.addEventListener('click', () => {
+    if (epicDate.value) loadEPIC(epicDate.value);
   });
 });

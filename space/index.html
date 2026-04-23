@@ -54,6 +54,26 @@
       <div id="apod-content" class="apod-content" aria-live="polite" aria-atomic="true"></div>
     </section>
 
+    <!-- ── EPIC Earth Imagery ──────────────────────── -->
+    <section class="section epic-section" aria-labelledby="epic-heading">
+      <div class="section-intro">
+        <div class="section-title-group">
+          <h2 id="epic-heading" class="section-title">Earth from Space</h2>
+          <p class="section-desc">Full-disc imagery from DSCOVR's EPIC camera, updated daily</p>
+        </div>
+        <div class="epic-controls">
+          <div class="date-field">
+            <label for="epic-date" class="control-label">Date</label>
+            <div class="epic-date-row">
+              <input type="date" id="epic-date" class="date-input" aria-label="Select date for EPIC imagery" min="2015-06-13">
+              <button id="epic-view" class="btn-primary">View</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="epic-content" class="epic-content" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
     <!-- ── Near Earth Asteroids ──────────────────────── -->
     <section class="section neo-section" aria-labelledby="neo-heading">
       <div class="section-intro">
@@ -75,6 +95,7 @@
               </div>
             </div>
             <button id="neo-search" class="btn-primary">Search</button>
+            <button id="neo-hazard-filter" class="btn-filter" aria-pressed="false">Hazardous only</button>
           </div>
           <p id="neo-date-error" class="field-error" hidden></p>
         </div>
